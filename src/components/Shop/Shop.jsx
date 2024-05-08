@@ -14,6 +14,7 @@ const Shop = () => {
   const [cart, setCart] = useState([]);
   //Pagination
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(0);
   const { count } = useLoaderData();
   const numOfPages = Math.ceil(count / itemsPerPage);
   const pages = [...Array(numOfPages).keys()];
@@ -87,10 +88,44 @@ const Shop = () => {
           </Link>
         </Cart>
       </div>
-      <div className="pagination">
-        {pages.map((page, idx) => (
-          <button key={idx}>{page}</button>
-        ))}
+      <div>
+        <p style={{ textAlign: "center" }}>Current Page: {currentPage}</p>
+        <div className="pagination">
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            Prev
+          </button>
+          {pages.map((page, idx) => (
+            <button
+              onClick={() => setCurrentPage(page)}
+              className={currentPage === page ? "paginationActive" : ""}
+              key={idx}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === pages.length - 1}
+          >
+            Next
+          </button>
+          <select
+            style={{ padding: "0 1rem" }}
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(parseFloat(e.target.value));
+              setCurrentPage(0);
+            }}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+          </select>
+        </div>
       </div>
     </div>
   );
